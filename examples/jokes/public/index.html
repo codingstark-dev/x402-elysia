@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>x402 Joke Generator</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #0f0f13;
+      color: #e8e8ed;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .card {
+      background: #1a1a24;
+      border: 1px solid #2a2a38;
+      border-radius: 20px;
+      padding: 48px 40px;
+      max-width: 560px;
+      width: 100%;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.5);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(99,102,241,0.15);
+      border: 1px solid rgba(99,102,241,0.3);
+      color: #818cf8;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 999px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, #e8e8ed 0%, #818cf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      color: #6b7280;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin-bottom: 36px;
+    }
+
+    .price-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(16,185,129,0.08);
+      border: 1px solid rgba(16,185,129,0.2);
+      border-radius: 10px;
+      padding: 10px 14px;
+      margin-bottom: 24px;
+      font-size: 0.875rem;
+      color: #34d399;
+    }
+
+    .price-row .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #34d399;
+      flex-shrink: 0;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    /* Mode tabs */
+    .mode-tabs {
+      display: flex;
+      gap: 6px;
+      background: #0f0f13;
+      border: 1px solid #2a2a38;
+      border-radius: 12px;
+      padding: 4px;
+      margin-bottom: 20px;
+    }
+
+    .mode-tab {
+      flex: 1;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 9px;
+      background: transparent;
+      color: #6b7280;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+      box-shadow: none;
+      width: auto;
+    }
+
+    .mode-tab.active {
+      background: #1a1a24;
+      color: #e8e8ed;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+    }
+
+    .mode-tab:hover:not(.active):not(:disabled) {
+      background: rgba(255,255,255,0.04);
+      color: #9ca3af;
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* Wallet panel */
+    .wallet-panel {
+      margin-bottom: 20px;
+    }
+
+    .wallet-info {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: rgba(99,102,241,0.08);
+      border: 1px solid rgba(99,102,241,0.2);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 0.8rem;
+    }
+
+    .wallet-addr {
+      color: #818cf8;
+      font-family: monospace;
+      letter-spacing: 0.02em;
+    }
+
+    .disconnect-btn {
+      background: transparent;
+      border: 1px solid rgba(99,102,241,0.3);
+      color: #818cf8;
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      width: auto;
+      box-shadow: none;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .disconnect-btn:hover:not(:disabled) {
+      background: rgba(99,102,241,0.1);
+      color: #a5b4fc;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .no-wallet-msg {
+      background: rgba(245,158,11,0.08);
+      border: 1px solid rgba(245,158,11,0.2);
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 0.82rem;
+      color: #fbbf24;
+      line-height: 1.5;
+    }
+
+    .no-wallet-msg a {
+      color: #f59e0b;
+      text-decoration: underline;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px 24px;
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+      box-shadow: 0 4px 20px rgba(99,102,241,0.3);
+    }
+
+    button:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 28px rgba(99,102,241,0.45);
+    }
+
+    button:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 14px; height: 14px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .joke-box {
+      margin-top: 28px;
+      padding: 24px;
+      background: #0f0f13;
+      border: 1px solid #2a2a38;
+      border-radius: 14px;
+      animation: fadeIn 0.4s ease;
+      display: none;
+    }
+
+    .joke-box.visible { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .joke-setup {
+      font-size: 1rem;
+      color: #9ca3af;
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+
+    .joke-punchline {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #e8e8ed;
+      line-height: 1.4;
+    }
+
+    .receipt {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid #2a2a38;
+      font-size: 0.75rem;
+      color: #4b5563;
+    }
+
+    .receipt a {
+      color: #6366f1;
+      text-decoration: none;
+      word-break: break-all;
+    }
+
+    .receipt a:hover { text-decoration: underline; }
+
+    .error-box {
+      margin-top: 20px;
+      padding: 14px 18px;
+      background: rgba(239,68,68,0.08);
+      border: 1px solid rgba(239,68,68,0.2);
+      border-radius: 10px;
+      color: #f87171;
+      font-size: 0.875rem;
+      display: none;
+    }
+
+    .error-box.visible { display: block; }
+
+    .footer {
+      margin-top: 32px;
+      text-align: center;
+      font-size: 0.75rem;
+      color: #374151;
+    }
+
+    .footer a { color: #4b5563; text-decoration: none; }
+    .footer a:hover { color: #6b7280; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="badge">
+      <span>&#9889;</span> Powered by x402
+    </div>
+    <h1>Joke Generator</h1>
+    <p class="subtitle">
+      Every joke is protected by the x402 payment protocol on Solana Devnet.
+      Each click costs <strong style="color:#e8e8ed">$0.001 USDC</strong> and settles on-chain in seconds.
+    </p>
+
+    <div class="price-row">
+      <span class="dot"></span>
+      <span>Solana Devnet &middot; USDC &middot; $0.001 per joke</span>
+    </div>
+
+    <!-- Mode selector tabs -->
+    <div class="mode-tabs">
+      <button class="mode-tab active" id="tabServer" onclick="setMode('server')">
+        Server Wallet
+      </button>
+      <button class="mode-tab" id="tabWallet" onclick="setMode('wallet')">
+        My Wallet
+      </button>
+    </div>
+
+    <!-- Wallet panel (shown in wallet mode) -->
+    <div class="wallet-panel" id="walletPanel" style="display:none">
+      <div id="walletConnected" style="display:none">
+        <div class="wallet-info">
+          <span class="wallet-addr" id="walletAddr"></span>
+          <button class="disconnect-btn" onclick="disconnectWallet()">Disconnect</button>
+        </div>
+      </div>
+      <div id="walletDisconnected">
+        <button onclick="connectWallet()" id="connectBtn">Connect Wallet</button>
+        <div id="noWalletMsg" class="no-wallet-msg" style="display:none;margin-top:12px">
+          No Solana wallet detected. Install
+          <a href="https://phantom.app" target="_blank" rel="noopener">Phantom</a>
+          or
+          <a href="https://solflare.com" target="_blank" rel="noopener">Solflare</a>
+          and reload.
+        </div>
+      </div>
+    </div>
+
+    <!-- Main action button -->
+    <button id="btn" onclick="handleGetJoke()">
+      Get a Joke
+    </button>
+
+    <div class="joke-box" id="jokeBox">
+      <div class="joke-setup" id="jokeSetup"></div>
+      <div class="joke-punchline" id="jokePunchline"></div>
+      <div class="receipt" id="receipt"></div>
+    </div>
+
+    <div class="error-box" id="errorBox"></div>
+  </div>
+
+  <div class="footer">
+    <a href="https://x402.org" target="_blank" rel="noopener">x402.org</a>
+    &nbsp;&middot;&nbsp;
+    <a href="https://github.com/coinbase/x402" target="_blank" rel="noopener">GitHub</a>
+    &nbsp;&middot;&nbsp; Built with @x402/elysia
+  </div>
+
+  <script>
+    // -----------------------------------------------------------------------
+    // State
+    // -----------------------------------------------------------------------
+    var currentMode = 'server';   // 'server' | 'wallet'
+    var walletAddress = null;     // connected wallet public key (base58 string)
+    var walletProvider = null;    // the provider object (phantom/solflare)
+
+    // -----------------------------------------------------------------------
+    // Wallet detection helpers
+    // -----------------------------------------------------------------------
+
+    function getProvider() {
+      // Phantom
+      if (window.phantom && window.phantom.solana && window.phantom.solana.isPhantom) {
+        return window.phantom.solana;
+      }
+      // Solflare / generic injected wallet
+      if (window.solana && window.solana.isConnected !== undefined) {
+        return window.solana;
+      }
+      return null;
+    }
+
+    // -----------------------------------------------------------------------
+    // Mode switching
+    // -----------------------------------------------------------------------
+
+    function setMode(mode) {
+      currentMode = mode;
+      document.getElementById('tabServer').classList.toggle('active', mode === 'server');
+      document.getElementById('tabWallet').classList.toggle('active', mode === 'wallet');
+      document.getElementById('walletPanel').style.display = mode === 'wallet' ? 'block' : 'none';
+
+      var btn = document.getElementById('btn');
+      if (mode === 'server') {
+        btn.textContent = 'Get a Joke';
+      } else {
+        if (walletAddress) {
+          btn.textContent = 'Get a Joke (My Wallet)';
+        } else {
+          btn.textContent = 'Get a Joke (My Wallet)';
+          btn.disabled = true;
+        }
+      }
+      updateWalletUI();
+    }
+
+    function updateWalletUI() {
+      var btn = document.getElementById('btn');
+
+      if (currentMode === 'wallet') {
+        if (walletAddress) {
+          document.getElementById('walletConnected').style.display = 'block';
+          document.getElementById('walletDisconnected').style.display = 'none';
+          document.getElementById('noWalletMsg').style.display = 'none';
+          document.getElementById('walletAddr').textContent =
+            walletAddress.slice(0, 4) + '\u2026' + walletAddress.slice(-4);
+          btn.disabled = false;
+          btn.textContent = 'Get a Joke (My Wallet)';
+        } else {
+          document.getElementById('walletConnected').style.display = 'none';
+          document.getElementById('walletDisconnected').style.display = 'block';
+          btn.disabled = true;
+          btn.textContent = 'Get a Joke (My Wallet)';
+        }
+      } else {
+        btn.disabled = false;
+      }
+    }
+
+    // -----------------------------------------------------------------------
+    // Wallet connect / disconnect
+    // -----------------------------------------------------------------------
+
+    async function connectWallet() {
+      var provider = getProvider();
+      if (!provider) {
+        document.getElementById('noWalletMsg').style.display = 'block';
+        return;
+      }
+      try {
+        var resp = await provider.connect();
+        walletAddress = resp.publicKey.toString();
+        walletProvider = provider;
+        updateWalletUI();
+      } catch (err) {
+        showError('Wallet connection cancelled or failed: ' + String(err));
+      }
+    }
+
+    function disconnectWallet() {
+      if (walletProvider && typeof walletProvider.disconnect === 'function') {
+        walletProvider.disconnect();
+      }
+      walletAddress = null;
+      walletProvider = null;
+      updateWalletUI();
+    }
+
+    // -----------------------------------------------------------------------
+    // Joke fetching
+    // -----------------------------------------------------------------------
+
+    function handleGetJoke() {
+      if (currentMode === 'server') {
+        getJokeServerWallet();
+      } else {
+        getJokeMyWallet();
+      }
+    }
+
+    function setBusy(label) {
+      var btn = document.getElementById('btn');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span> ' + label;
+      document.getElementById('jokeBox').classList.remove('visible');
+      document.getElementById('errorBox').classList.remove('visible');
+    }
+
+    function setIdle(label) {
+      var btn = document.getElementById('btn');
+      btn.disabled = false;
+      btn.textContent = label;
+    }
+
+    function showJoke(data) {
+      document.getElementById('jokeSetup').textContent = data.setup;
+      document.getElementById('jokePunchline').textContent = data.punchline;
+      var receiptEl = document.getElementById('receipt');
+      if (data.txSignature) {
+        var explorerUrl =
+          'https://explorer.solana.com/tx/' + data.txSignature + '?cluster=devnet';
+        receiptEl.innerHTML =
+          'Settlement: <a href="' + explorerUrl + '" target="_blank" rel="noopener">' +
+          data.txSignature.slice(0, 16) + '\u2026' + data.txSignature.slice(-8) +
+          '</a>';
+      } else {
+        receiptEl.textContent = '';
+      }
+      document.getElementById('jokeBox').classList.add('visible');
+    }
+
+    function showError(msg) {
+      var errorBox = document.getElementById('errorBox');
+      errorBox.textContent = String(msg);
+      errorBox.classList.add('visible');
+    }
+
+    // -- Server wallet flow (unchanged from before) --
+
+    async function getJokeServerWallet() {
+      setBusy('Paying & fetching\u2026');
+      try {
+        var res = await fetch('/get-joke');
+        var data = await res.json();
+        if (!res.ok) throw new Error(data.error || data.details || 'Request failed');
+        showJoke(data);
+        setIdle('Get Another Joke');
+      } catch (err) {
+        showError(String(err));
+        setIdle('Get Another Joke');
+      }
+    }
+
+    // -- Browser wallet flow --
+
+    async function getJokeMyWallet() {
+      if (!walletAddress || !walletProvider) {
+        showError('No wallet connected. Please connect your wallet first.');
+        return;
+      }
+
+      setBusy('Building transaction\u2026');
+
+      try {
+        // Step 1: Get unsigned transaction from server
+        var prepRes = await fetch('/prepare-joke-tx?wallet=' + encodeURIComponent(walletAddress));
+        var prepData = await prepRes.json();
+        if (!prepRes.ok) throw new Error(prepData.error || 'Failed to prepare transaction');
+
+        var unsignedTxBase64 = prepData.unsignedTxBase64;
+        var x402Version = prepData.x402Version;
+        var paymentRequirements = prepData.paymentRequirements;
+        var resource = prepData.resource;
+
+        // Step 2: Deserialize with @solana/web3.js from esm.sh
+        document.getElementById('btn').innerHTML =
+          '<span class="spinner"></span> Waiting for wallet\u2026';
+
+        var web3 = await import('https://esm.sh/@solana/web3.js?bundle');
+        var txBytes = Uint8Array.from(atob(unsignedTxBase64), function(c) { return c.charCodeAt(0); });
+        var tx = web3.VersionedTransaction.deserialize(txBytes);
+
+        // Step 3: Sign with the browser wallet
+        var signedTx = await walletProvider.signTransaction(tx);
+
+        document.getElementById('btn').innerHTML =
+          '<span class="spinner"></span> Submitting payment\u2026';
+
+        // Step 4: Send signed tx to server
+        var signedBytes = signedTx.serialize();
+        var signedTxBase64 = btoa(String.fromCharCode.apply(null, signedBytes));
+
+        var jokeRes = await fetch('/wallet-joke', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({
+            signedTxBase64: signedTxBase64,
+            x402Version: x402Version,
+            paymentRequirements: paymentRequirements,
+            resource: resource,
+          }),
+        });
+        var jokeData = await jokeRes.json();
+        if (!jokeRes.ok) throw new Error(jokeData.error || jokeData.details || 'Payment failed');
+
+        showJoke(jokeData);
+        setIdle('Get Another Joke (My Wallet)');
+      } catch (err) {
+        showError(String(err));
+        setIdle('Get Another Joke (My Wallet)');
+      }
+    }
+
+    // -----------------------------------------------------------------------
+    // Init — check for pre-connected wallet on page load
+    // -----------------------------------------------------------------------
+
+    (function init() {
+      var provider = getProvider();
+      // Some wallets (Phantom) auto-reconnect eagerly; check if already connected
+      if (provider && provider.isConnected && provider.publicKey) {
+        walletAddress = provider.publicKey.toString();
+        walletProvider = provider;
+      }
+      updateWalletUI();
+    })();
+  </script>
+</body>
+</html>

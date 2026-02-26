@@ -1,15 +1,71 @@
 {
-  "name": "x402-elysia",
-  "version": "1.0.50",
+  "name": "@x402/elysia",
+  "version": "1.0.0",
+  "description": "x402 Payment Protocol middleware plugin for ElysiaJS",
+  "license": "MIT",
+  "keywords": [
+    "x402",
+    "elysia",
+    "payment",
+    "middleware",
+    "http-402",
+    "crypto-payment",
+    "solana",
+    "evm",
+    "web3",
+    "monetization"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/codingstark-dev/x402-elysia.git"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "bun": ">=1.0.0"
+  },
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.mjs",
+  "types": "./dist/cjs/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/esm/index.d.mts",
+        "default": "./dist/esm/index.mjs"
+      },
+      "require": {
+        "types": "./dist/cjs/index.d.ts",
+        "default": "./dist/cjs/index.js"
+      }
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "bun run --watch src/index.ts"
+    "dev": "bun run --watch src/index.ts",
+    "build": "bunup",
+    "release": "npm version patch && bun run build && bun publish --access public",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit",
+    "gen:solana-env": "bun run scripts/gen-solana-env.ts",
+    "bench": "bun run --bun bench/x402-bench.ts"
+  },
+  "peerDependencies": {
+    "elysia": ">=1.0.0"
   },
   "dependencies": {
-    "elysia": "latest"
+    "@x402/core": "^2.4.0"
   },
   "devDependencies": {
-    "bun-types": "latest"
-  },
-  "module": "src/index.js"
+    "@elysiajs/eden": "^1.4.8",
+    "@sinclair/typebox": "^0.34.48",
+    "@types/node": "^22.0.0",
+    "@x402/evm": "^2.4.0",
+    "@x402/svm": "^2.4.0",
+    "bun-types": "latest",
+    "bunup": "^0.16.29",
+    "elysia": "latest",
+    "typescript": "^5.9.3",
+    "viem": "^2.46.2"
+  }
 }
