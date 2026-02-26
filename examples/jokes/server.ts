@@ -43,8 +43,8 @@
  */
 
 import { Elysia, file } from "elysia";
-import { HTTPFacilitatorClient, paymentMiddleware, x402ResourceServer } from "../../src/index";
-import type { RouteConfig } from "../../src/index";
+import { HTTPFacilitatorClient, paymentMiddleware, x402ResourceServer } from "@codingstark/x402-elysia";
+import type { RouteConfig } from "@codingstark/x402-elysia";
 
 // ---------------------------------------------------------------------------
 // Config

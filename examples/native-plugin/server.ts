@@ -3,7 +3,7 @@ import {
   paymentMiddlewareFromConfig,
   type PaywallConfig,
   type RoutesConfig,
-} from "../../src/index";
+} from "@codingstark/x402-elysia";
 
 type X402PluginOptions = {
   routes: RoutesConfig;
