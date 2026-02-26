@@ -1,15 +1,15 @@
-# @x402/elysia
+# @codingstark/x402-elysia
 
 [ElysiaJS](https://elysiajs.com/) plugin for the [x402 Payment Protocol](https://www.x402.org/). Protect any route behind a crypto micropayment with a single `.use()` call.
 
 ## Installation
 
 ```bash
-bun add @x402/elysia
+bun add @codingstark/x402-elysia
 # or
-npm install @x402/elysia
+npm install @codingstark/x402-elysia
 # or
-pnpm add @x402/elysia
+pnpm add @codingstark/x402-elysia
 ```
 
 Peer dependency: `elysia >= 1.0.0`
@@ -18,7 +18,7 @@ Peer dependency: `elysia >= 1.0.0`
 
 ```typescript
 import { Elysia } from "elysia";
-import { paymentMiddlewareFromConfig } from "@x402/elysia";
+import { paymentMiddlewareFromConfig } from "@codingstark/x402-elysia";
 
 const app = new Elysia()
   .use(
@@ -56,7 +56,7 @@ The package exports three factory functions at increasing levels of abstraction.
 The simplest way to add x402 protection. Builds the full server stack internally.
 
 ```typescript
-import { paymentMiddlewareFromConfig, HTTPFacilitatorClient } from "@x402/elysia";
+import { paymentMiddlewareFromConfig, HTTPFacilitatorClient } from "@codingstark/x402-elysia";
 import { ExactEvmScheme } from "@x402/evm/exact/server";
 
 const app = new Elysia()
@@ -91,7 +91,7 @@ Mid-level factory. Accepts a pre-configured `x402ResourceServer`.
 
 ```typescript
 import { Elysia } from "elysia";
-import { x402ResourceServer, paymentMiddleware, HTTPFacilitatorClient } from "@x402/elysia";
+import { x402ResourceServer, paymentMiddleware, HTTPFacilitatorClient } from "@codingstark/x402-elysia";
 import { ExactEvmScheme } from "@x402/evm/exact/server";
 
 const facilitator = new HTTPFacilitatorClient({ url: "https://x402.org/facilitator" });
@@ -117,7 +117,7 @@ const app = new Elysia()
 Low-level factory. Accepts a fully constructed `x402HTTPResourceServer`.
 
 ```typescript
-import { x402HTTPResourceServer, paymentMiddlewareFromHTTPServer } from "@x402/elysia";
+import { x402HTTPResourceServer, paymentMiddlewareFromHTTPServer } from "@codingstark/x402-elysia";
 
 const httpServer = new x402HTTPResourceServer(resourceServer, routes);
 
@@ -139,7 +139,7 @@ const app = new Elysia()
 Routes are defined as a `RoutesConfig` object whose keys are `"METHOD /path"` strings.
 
 ```typescript
-import type { RoutesConfig } from "@x402/elysia";
+import type { RoutesConfig } from "@codingstark/x402-elysia";
 
 const routes: RoutesConfig = {
   "GET /api/data": {
@@ -212,7 +212,7 @@ const app = new Elysia()
 Accept payment on multiple chains simultaneously by providing an array of `accepts` entries and registering each scheme:
 
 ```typescript
-import { paymentMiddleware, x402ResourceServer, HTTPFacilitatorClient } from "@x402/elysia";
+import { paymentMiddleware, x402ResourceServer, HTTPFacilitatorClient } from "@codingstark/x402-elysia";
 import { ExactEvmScheme } from "@x402/evm/exact/server";
 import { ExactSvmScheme } from "@x402/svm/exact/server";
 
@@ -266,7 +266,7 @@ bun add @x402/paywall
 Then pass a `PaywallConfig`:
 
 ```typescript
-import type { PaywallConfig } from "@x402/elysia";
+import type { PaywallConfig } from "@codingstark/x402-elysia";
 
 const paywallConfig: PaywallConfig = {
   appName: "My App",
@@ -284,7 +284,7 @@ Without `@x402/paywall` installed the middleware falls back to a minimal HTML pa
 ### Custom Paywall Provider
 
 ```typescript
-import type { PaywallProvider } from "@x402/elysia";
+import type { PaywallProvider } from "@codingstark/x402-elysia";
 
 const myPaywall: PaywallProvider = async (requirements, config) => {
   return `<html>...your custom HTML...</html>`;
@@ -296,7 +296,7 @@ app.use(paymentMiddlewareFromConfig(routes, undefined, undefined, paywallConfig,
 ## Custom Facilitator Client
 
 ```typescript
-import { HTTPFacilitatorClient } from "@x402/elysia";
+import { HTTPFacilitatorClient } from "@codingstark/x402-elysia";
 
 const customFacilitator = new HTTPFacilitatorClient({
   url: "https://your-facilitator.example.com",
@@ -323,7 +323,7 @@ import {
   x402ResourceServer,
   paymentMiddlewareFromHTTPServer,
   type ProtectedRequestHook,
-} from "@x402/elysia";
+} from "@codingstark/x402-elysia";
 
 const hook: ProtectedRequestHook = async (context, routeConfig) => {
   const apiKey = context.adapter.getHeader("x-api-key");
@@ -352,7 +352,7 @@ app.use(paymentMiddlewareFromHTTPServer(httpServer));
 The `ElysiaAdapter` class adapts an Elysia `Context` into the framework-agnostic `HTTPAdapter` interface consumed by `@x402/core`. It is exported for testing and advanced use cases.
 
 ```typescript
-import { ElysiaAdapter } from "@x402/elysia";
+import { ElysiaAdapter } from "@codingstark/x402-elysia";
 
 // In tests or custom plugins:
 const adapter = new ElysiaAdapter(ctx);
@@ -409,7 +409,7 @@ import type {
 
   // Plugin-specific
   SchemeRegistration,
-} from "@x402/elysia";
+} from "@codingstark/x402-elysia";
 ```
 
 ## Build with Bunup
@@ -458,7 +458,7 @@ bun publish --access public
 5. Verify install:
 
 ```bash
-bun add @x402/elysia
+bun add @codingstark/x402-elysia
 ```
 
 ## Native Elysia Plugin Wrapper Example
@@ -471,7 +471,7 @@ import {
   paymentMiddlewareFromConfig,
   type RoutesConfig,
   type PaywallConfig,
-} from "@x402/elysia";
+} from "@codingstark/x402-elysia";
 
 type X402PluginOptions = {
   routes: RoutesConfig;

@@ -1,5 +1,5 @@
 /**
- * x402 Joke Generator — @x402/elysia fullstack example
+ * x402 Joke Generator — @codingstark/x402-elysia fullstack example
  * ======================================================
  * A single-file Elysia app that demonstrates the complete x402 payment
  * protocol on Solana Devnet. Every joke costs $0.001 USDC.

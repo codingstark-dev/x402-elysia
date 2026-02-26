@@ -1,5 +1,5 @@
 {
-  "name": "@x402/elysia",
+  "name": "@codingstark/x402-elysia",
   "version": "1.0.0",
   "description": "x402 Payment Protocol middleware plugin for ElysiaJS",
   "license": "MIT",
@@ -17,7 +17,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/codingstark-dev/x402-elysia.git"
+    "url": "git+https://github.com/codingstark-dev/x402-elysia.git"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "engines": {
     "node": ">=20.0.0",

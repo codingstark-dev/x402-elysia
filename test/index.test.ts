@@ -1,5 +1,5 @@
 /**
- * Tests for @x402/elysia payment middleware plugin
+ * Tests for @codingstark/x402-elysia payment middleware plugin
  *
  * Strategy: we mock `x402HTTPResourceServer` at the module boundary so tests
  * run fully offline — no real facilitator, no real blockchain.

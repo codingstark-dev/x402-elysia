@@ -412,7 +412,7 @@ export function paymentMiddlewareFromHTTPServer(
  * ```ts
  * import { Elysia } from "elysia";
  * import { x402ResourceServer } from "@x402/core/server";
- * import { paymentMiddleware } from "@x402/elysia";
+ * import { paymentMiddleware } from "@codingstark/x402-elysia";
  *
  * const server = new x402ResourceServer(facilitatorClient)
  *   .register("eip155:84532", new ExactEvmScheme());
@@ -460,8 +460,8 @@ export function paymentMiddleware(
  * @example
  * ```ts
  * import { Elysia } from "elysia";
- * import { HTTPFacilitatorClient } from "@x402/elysia";
- * import { paymentMiddlewareFromConfig } from "@x402/elysia";
+ * import { HTTPFacilitatorClient } from "@codingstark/x402-elysia";
+ * import { paymentMiddlewareFromConfig } from "@codingstark/x402-elysia";
  *
  * const app = new Elysia()
  *   .use(paymentMiddlewareFromConfig(

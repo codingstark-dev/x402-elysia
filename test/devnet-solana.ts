@@ -1,5 +1,5 @@
 /**
- * @x402/elysia — Live Solana Devnet Integration Test
+ * @codingstark/x402-elysia — Live Solana Devnet Integration Test
  * ===================================================
  * Tests the full x402 payment flow against Solana Devnet using the public
  * x402.org facilitator. No real money is spent.
@@ -98,7 +98,7 @@ async function loadDeps() {
 // ---------------------------------------------------------------------------
 
 async function main() {
-  console.log("\n=== @x402/elysia Solana Devnet Integration Test ===\n");
+  console.log("\n=== @codingstark/x402-elysia Solana Devnet Integration Test ===\n");
   console.log(`Network:     ${NETWORK}`);
   console.log(`Facilitator: ${FACILITATOR_URL}`);
   console.log(`Price:       ${PRICE} USDC per request`);
